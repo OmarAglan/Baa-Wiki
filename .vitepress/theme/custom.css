@@ -1,0 +1,264 @@
+/**
+ * Arabic-First Custom Theme for Baa Language Documentation
+ * Optimized for RTL reading and Arabic typography
+ */
+
+/* Import Arabic fonts */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500&display=swap');
+
+/* Root CSS Variables for Arabic Theme */
+:root {
+  /* Arabic Typography */
+  --vp-font-family-base: 'Noto Sans Arabic', 'Segoe UI', 'Roboto', sans-serif;
+  --vp-font-family-mono: 'Fira Code', 'Consolas', 'Monaco', monospace;
+  
+  /* Arabic-specific colors */
+  --vp-c-brand: #d4af37; /* Arabic gold */
+  --vp-c-brand-light: #e6c96b;
+  --vp-c-brand-lighter: #f2e39f;
+  --vp-c-brand-dark: #b8941f;
+  --vp-c-brand-darker: #9c7d1a;
+  --vp-c-brand-dimm: rgba(212, 175, 55, 0.08);
+  
+  /* Enhanced contrast for Arabic text */
+  --vp-c-text-1: rgba(60, 60, 67, 0.95);
+  --vp-c-text-2: rgba(60, 60, 67, 0.85);
+  
+  /* Spacing adjustments for Arabic */
+  --vp-layout-max-width: 1280px;
+}
+
+/* Dark mode Arabic colors */
+.dark {
+  --vp-c-brand: #f4d03f;
+  --vp-c-brand-light: #f7dc6f;
+  --vp-c-brand-lighter: #fbeaa7;
+  --vp-c-brand-dark: #d4af37;
+  --vp-c-brand-darker: #b8941f;
+  --vp-c-text-1: rgba(255, 255, 245, 0.95);
+  --vp-c-text-2: rgba(235, 235, 245, 0.85);
+}
+
+/* RTL Layout Improvements */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] .VPNav .VPNavBarMenu {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .VPSidebar {
+  border-left: 1px solid var(--vp-c-divider);
+  border-right: none;
+  right: 0;
+  left: auto;
+}
+
+[dir="rtl"] .VPSidebarItem .text {
+  padding-right: 0;
+  padding-left: 1rem;
+}
+
+[dir="rtl"] .VPNavBarMenuGroup .VPNavBarMenuGroupItem {
+  margin: 0 0 0 1rem;
+}
+
+[dir="rtl"] .edit-link {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Arabic Typography Enhancements */
+.VPDoc h1, .VPDoc h2, .VPDoc h3, .VPDoc h4, .VPDoc h5, .VPDoc h6 {
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+[dir="rtl"] .VPDoc h1, [dir="rtl"] .VPDoc h2, [dir="rtl"] .VPDoc h3 {
+  letter-spacing: -0.02em;
+}
+
+/* Better line height for Arabic text */
+.VPDoc p, .VPDoc li {
+  line-height: 1.75;
+}
+
+[dir="rtl"] .VPDoc p, [dir="rtl"] .VPDoc li {
+  line-height: 1.8;
+}
+
+/* Baa Language Code Highlighting */
+.language-baa .token.keyword {
+  color: #d73a49; /* Red for Arabic keywords */
+  font-weight: 600;
+}
+
+.language-baa .token.string {
+  color: #032f62; /* Blue for strings */
+}
+
+.language-baa .token.arabic-number {
+  color: #005cc5; /* Teal for Arabic-Indic numbers */
+  font-weight: 500;
+}
+
+.language-baa .token.comment {
+  color: #6a737d; /* Gray for comments */
+  font-style: italic;
+}
+
+.language-baa .token.function {
+  color: #6f42c1; /* Purple for functions */
+  font-weight: 500;
+}
+
+.language-baa .token.arabic-identifier {
+  color: #e36209; /* Orange for Arabic identifiers */
+}
+
+/* Dark mode Baa syntax highlighting */
+.dark .language-baa .token.keyword {
+  color: #ff7b72;
+}
+
+.dark .language-baa .token.string {
+  color: #a5d6ff;
+}
+
+.dark .language-baa .token.arabic-number {
+  color: #79c0ff;
+}
+
+.dark .language-baa .token.comment {
+  color: #8b949e;
+}
+
+.dark .language-baa .token.function {
+  color: #d2a8ff;
+}
+
+.dark .language-baa .token.arabic-identifier {
+  color: #ffa657;
+}
+
+/* Code block improvements for Arabic context */
+.vp-code-group {
+  direction: ltr; /* Keep code blocks LTR even in RTL context */
+}
+
+[dir="rtl"] .vp-code-group {
+  text-align: left;
+}
+
+/* Custom components styling */
+.baa-example {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
+.baa-example-header {
+  background: var(--vp-c-bg-soft);
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--vp-c-divider);
+  font-weight: 500;
+  color: var(--vp-c-text-1);
+}
+
+.baa-example-code {
+  background: var(--vp-code-block-bg);
+}
+
+.baa-example-output {
+  background: var(--vp-c-bg-alt);
+  padding: 1rem;
+  border-top: 1px solid var(--vp-c-divider);
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.875rem;
+}
+
+/* Navigation improvements for Arabic */
+[dir="rtl"] .VPNavBar .content .title {
+  margin-right: 0;
+  margin-left: 1.5rem;
+}
+
+[dir="rtl"] .VPNavBarTitle .text {
+  padding-left: 0;
+  padding-right: 0.5rem;
+}
+
+/* Search box RTL */
+[dir="rtl"] .VPNavBarSearch {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+/* Footer adjustments */
+[dir="rtl"] .VPFooter {
+  text-align: right;
+}
+
+[dir="rtl"] .prev-next .prev,
+[dir="rtl"] .prev-next .next {
+  direction: rtl;
+}
+
+/* Hero section Arabic optimizations */
+.VPHero .text {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+[dir="rtl"] .VPHero .text {
+  letter-spacing: -0.02em;
+}
+
+[dir="rtl"] .VPHero .tagline {
+  line-height: 1.6;
+}
+
+/* Feature cards RTL */
+[dir="rtl"] .VPFeatures .item {
+  text-align: right;
+}
+
+[dir="rtl"] .VPFeatures .icon {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Responsive Arabic typography */
+@media (max-width: 768px) {
+  :root {
+    --vp-font-size-base: 16px;
+  }
+  
+  [dir="rtl"] .VPDoc p, [dir="rtl"] .VPDoc li {
+    line-height: 1.7;
+  }
+}
+
+/* Accessibility improvements for Arabic */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print styles for Arabic documentation */
+@media print {
+  [dir="rtl"] body {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  .VPSidebar, .VPNavBar {
+    display: none !important;
+  }
+}

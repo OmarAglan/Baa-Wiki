@@ -1,0 +1,42 @@
+{
+  "name": "baa-wiki",
+  "version": "1.0.0",
+  "description": "Documentation site for Baa Programming Language - موقع توثيق لغة باء البرمجية",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "serve": "vitepress serve",
+    "deploy": "npm run build && gh-pages -d .vitepress/dist"
+  },
+  "keywords": [
+    "baa",
+    "programming-language",
+    "arabic",
+    "documentation",
+    "vitepress",
+    "rtl",
+    "لغة-برمجة",
+    "عربي"
+  ],
+  "author": "Baa Language Team",
+  "license": "MIT",
+  "dependencies": {
+    "vitepress": "^1.0.0-rc.39",
+    "vue": "^3.4.15"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "gh-pages": "^6.1.1",
+    "typescript": "^5.3.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OmarAglan/baa-wiki.git"
+  },
+  "homepage": "https://OmarAglan.github.io/baa-wiki/",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

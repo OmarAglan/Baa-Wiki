@@ -1,0 +1,221 @@
+name: 📚 Sync Documentation from Main Repository
+
+on:
+  schedule:
+    # Run every 6 hours to sync docs
+    - cron: '0 */6 * * *'
+  
+  workflow_dispatch:
+    # Allow manual triggering
+    
+  repository_dispatch:
+    # Triggered by main Baa repository when docs are updated
+    types: [docs-updated]
+
+jobs:
+  sync-docs:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    
+    steps:
+      - name: 🔄 Checkout baa-wiki repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: 🗑️ Remove old documentation
+        run: |
+          if [ -d "docs" ]; then
+            rm -rf docs/
+            echo "Removed existing docs directory"
+          else
+            echo "No existing docs directory found"
+          fi
+
+      - name: 📥 Clone main Baa repository
+        run: |
+          echo "Cloning main Baa repository..."
+          git clone --depth=1 https://github.com/OmarAglan/Baa.git temp-baa
+          
+          if [ -d "temp-baa/docs" ]; then
+            cp -r temp-baa/docs ./docs
+            echo "✅ Successfully copied docs from main repository"
+            ls -la docs/
+          else
+            echo "❌ No docs directory found in main repository"
+            mkdir -p docs
+            echo "# Documentation" > docs/index.md
+            echo "Documentation will be synced from the main repository." >> docs/index.md
+          fi
+          
+          rm -rf temp-baa
+
+      - name: 🔧 Process Arabic-first structure
+        run: |
+          # Create processing script if it doesn't exist
+          mkdir -p .vitepress/scripts
+          cat > .vitepress/scripts/process-docs.js << 'EOF'
+          const fs = require('fs');
+          const path = require('path');
+
+          function processDocsStructure() {
+            const docsDir = './docs';
+            
+            if (!fs.existsSync(docsDir)) {
+              console.log('No docs directory found');
+              return;
+            }
+
+            // Create index.md if it doesn't exist
+            const indexPath = path.join(docsDir, 'index.md');
+            if (!fs.existsSync(indexPath)) {
+              const indexContent = `---
+          home: true
+          title: لغة باء - Baa Programming Language
+          titleTemplate: false
+
+          hero:
+            name: لغة باء
+            text: لغة برمجة عربية حديثة
+            tagline: Modern Arabic Programming Language
+            image:
+              src: /logo.svg
+              alt: Baa Language Logo
+            actions:
+              - theme: brand
+                text: البداية السريعة
+                link: /00_نظرة_عامة/البداية_السريعة
+              - theme: alt
+                text: مشاهدة على GitHub
+                link: https://github.com/OmarAglan/Baa
+
+          features:
+            - icon: 🏛️
+              title: عربية بالكامل
+              details: لغة برمجة مصممة خصيصاً للمطورين العرب بنحو عربي طبيعي
+            - icon: ⚡
+              title: حديثة وسريعة
+              details: تجمع بين بساطة Python وقوة Rust مع دعم للبرمجة المتوازية
+            - icon: 🔧
+              title: أدوات متطورة
+              details: محرر مدمج، مدير حزم، ونظام بناء متقدم
+          ---
+
+          # أهلاً وسهلاً في لغة باء
+
+          **لغة باء** هي لغة برمجة عربية حديثة مصممة لتكون بديلاً طبيعياً وقوياً للمطورين العرب.
+
+          ## ✨ لماذا لغة باء؟
+
+          - **🌍 عربية بالكامل**: كتابة الكود بالعربية بشكل طبيعي ومألوف
+          - **🚀 أداء عالي**: مترجم محسّن لإنتاج كود سريع وفعّال  
+          - **🛠️ أدوات شاملة**: بيئة تطوير متكاملة مع جميع الأدوات المطلوبة
+          - **📚 توثيق ثري**: دليل شامل باللغة العربية مع أمثلة عملية
+
+          ## 🚀 ابدأ الآن
+
+          \`\`\`bash
+          # تثبيت لغة باء
+          curl -sSf https://get.baa-lang.org | sh
+
+          # إنشاء مشروع جديد
+          باء جديد مشروعي
+          cd مشروعي
+
+          # تشغيل المشروع
+          باء تشغيل
+          \`\`\`
+
+          ## 📖 تعلّم المزيد
+
+          - [البداية السريعة](/00_نظرة_عامة/البداية_السريعة) - ابدأ رحلتك مع لغة باء
+          - [مواصفات اللغة](/01_مواصفات_اللغة/) - تعرّف على قواعد ومفاهيم اللغة
+          - [أمثلة عملية](/04_أمثلة_وتطبيقات/) - اكتشف قوة لغة باء من خلال الأمثلة
+
+          ---
+
+          <div style="text-align: center; margin-top: 2rem; padding: 1rem; background: var(--vp-c-bg-soft); border-radius: 8px;">
+            <p>💡 <strong>نصيحة:</strong> ابدأ بقراءة <a href="/00_نظرة_عامة/البداية_السريعة">البداية السريعة</a> لفهم أساسيات لغة باء في دقائق معدودة</p>
+          </div>
+          `;
+              
+              fs.writeFileSync(indexPath, indexContent);
+              console.log('✅ Created index.md');
+            }
+
+            console.log('📁 Documentation structure processed successfully');
+          }
+
+          processDocsStructure();
+          EOF
+
+          node .vitepress/scripts/process-docs.js
+
+      - name: 📝 Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add docs/
+          
+          if git diff --staged --quiet; then
+            echo "📌 No changes to commit"
+          else
+            git commit -m "📚 Auto-sync docs from main repository
+
+            Synced documentation from: https://github.com/OmarAglan/Baa
+            Timestamp: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
+            Triggered by: ${{ github.event_name }}"
+            
+            git push
+            echo "✅ Successfully pushed documentation updates"
+          fi
+
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: |
+          echo "Installing VitePress and dependencies..."
+          npm ci
+
+      - name: 🏗️ Build documentation site
+        run: |
+          echo "Building documentation with VitePress..."
+          npm run build
+          
+          # Verify build output
+          if [ -d ".vitepress/dist" ]; then
+            echo "✅ Build successful"
+            ls -la .vitepress/dist/
+          else
+            echo "❌ Build failed - no dist directory found"
+            exit 1
+          fi
+
+      - name: 📤 Upload build artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .vitepress/dist
+
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
+      - name: 📊 Summary
+        run: |
+          echo "## 📚 Documentation Sync Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Documentation synced from main repository" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Site built successfully with VitePress" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Deployed to GitHub Pages" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 **Live site:** ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "🕐 **Last sync:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
