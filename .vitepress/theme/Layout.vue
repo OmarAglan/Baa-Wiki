@@ -4,7 +4,7 @@
     <template #doc-before>
       <div class="arabic-doc-wrapper">
         <!-- Language direction helper -->
-        <div class="lang-direction-indicator" v-if="$route.path.startsWith('/en/')">
+        <div class="lang-direction-indicator" v-if="isEnglish">
           📖 Reading in English (LTR)
         </div>
         <div class="lang-direction-indicator arabic" v-else>
@@ -16,8 +16,8 @@
     <template #doc-after>
       <div class="doc-footer-arabic">
         <div class="contribute-section">
-          <h3>{{ $route.path.startsWith('/en/') ? 'Contribute' : 'ساهم في التطوير' }}</h3>
-          <p v-if="$route.path.startsWith('/en/')">
+          <h3>{{ isEnglish ? 'Contribute' : 'ساهم في التطوير' }}</h3>
+          <p v-if="isEnglish">
             Help improve this documentation by contributing to the 
             <a href="https://github.com/OmarAglan/Baa" target="_blank">main repository</a>.
           </p>
@@ -28,7 +28,7 @@
         </div>
         
         <div class="sync-info">
-          <small v-if="$route.path.startsWith('/en/')">
+          <small v-if="isEnglish">
             📚 This documentation is automatically synced from the main Baa repository
           </small>
           <small v-else>
@@ -40,7 +40,7 @@
 
     <template #nav-bar-title-after>
       <div class="baa-logo-extra">
-        <span class="version-badge">{{ $route.path.startsWith('/en/') ? 'Alpha' : 'ألفا' }}</span>
+        <span class="version-badge">{{ isEnglish ? 'Alpha' : 'ألفا' }}</span>
       </div>
     </template>
   </Layout>
@@ -48,8 +48,13 @@
 
 <script setup>
 import DefaultTheme from 'vitepress/theme'
+import { useRoute } from 'vitepress'
+import { computed } from 'vue'
 
 const { Layout } = DefaultTheme
+
+const route = useRoute()
+const isEnglish = computed(() => route.path.startsWith('/en/'))
 </script>
 
 <style scoped>
