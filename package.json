@@ -23,13 +23,12 @@
   "author": "Baa Language Team",
   "license": "MIT",
   "dependencies": {
-    "vitepress": "^1.0.0-rc.39",
-    "vue": "^3.4.15"
+    "vitepress": "^1.6.4"
   },
   "devDependencies": {
-    "@types/node": "^20.10.6",
-    "gh-pages": "^6.1.1",
-    "typescript": "^5.3.3"
+    "@types/node": "^24.3.0",
+    "gh-pages": "^6.3.0",
+    "typescript": "^5.9.2"
   },
   "repository": {
     "type": "git",
