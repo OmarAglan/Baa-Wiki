@@ -1,74 +1,119 @@
-name: Sync Documentation
+name: Sync Documentation from Main Repo
 
 on:
-  push:
-    branches: [ main ]
-    paths: [ 'docs/**' ]
+  schedule:
+    # Runs every day at 2 AM UTC
+    - cron: '0 2 * * *'
+  
+  workflow_dispatch:
+    inputs:
+      force_sync:
+        description: 'Force sync even if no changes'
+        required: false
+        default: 'false'
+  
+  repository_dispatch:
+    types: [docs-updated]
 
 jobs:
   sync-docs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout main repository
-      uses: actions/checkout@v4
-      with:
-        path: temp-baa
-        
-    - name: Get last commit info from main repo
-      id: main-repo-info
-      run: |
-        cd temp-baa
-        echo "commit_sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-        
-        # Handle multi-line commit messages properly
-        commit_message="$(git log -1 --pretty=%B)"
-        echo "commit_message<<EOF" >> $GITHUB_OUTPUT
-        echo "$commit_message" >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
-        
-        echo "commit_author=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
-        cd ..
-        
-    - name: Checkout wiki repository
-      uses: actions/checkout@v4
-      with:
-        repository: ${{ github.repository }}.wiki
-        token: ${{ secrets.GITHUB_TOKEN }}
-        path: wiki
-        
-    - name: Sync documentation files
-      run: |
-        # Remove existing docs from wiki
-        rm -rf wiki/docs
-        
-        # Copy docs from main repo to wiki
-        cp -r temp-baa/docs wiki/
-        
-        # Navigate to wiki directory
-        cd wiki
-        
-        # Configure git
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        
-        # Check if there are any changes
-        if git diff --quiet && git diff --staged --quiet; then
-          echo "No changes to commit"
-          exit 0
-        fi
-        
-        # Add all changes
-        git add .
-        
-        # Commit with info from main repo
-        git commit -m "Sync docs from main repo
-        
-        Commit: ${{ steps.main-repo-info.outputs.commit_sha }}
-        Author: ${{ steps.main-repo-info.outputs.commit_author }}
-        
-        Original commit message:
-        ${{ steps.main-repo-info.outputs.commit_message }}"
-        
-        # Push changes
-        git push
+      - name: Checkout baa-wiki
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.SYNC_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Configure git
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Clean old docs
+        run: |
+          if [ -d "docs" ]; then
+            rm -rf docs/
+            echo "✅ Old docs removed"
+          fi
+
+      - name: Clone main Baa repository
+        run: |
+          git clone --depth 1 --single-branch \
+            https://x-access-token:${{ secrets.SYNC_TOKEN }}@github.com/${{ github.repository_owner }}/Baa.git \
+            temp-baa
+          
+          if [ -d "temp-baa/docs" ]; then
+            cp -r temp-baa/docs ./docs
+            echo "✅ Documentation copied from main repo"
+          else
+            echo "❌ No docs folder found in main repo"
+            exit 1
+          fi
+
+      - name: Get last commit info from main repo
+        id: main-repo-info
+        run: |
+          cd temp-baa
+          echo "commit_sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "commit_message=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
+          echo "commit_author=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
+          cd ..
+
+      - name: Process Arabic documentation
+        run: |
+          if [ -f "scripts/process-docs.js" ]; then
+            node scripts/process-docs.js
+            echo "✅ Documentation processed"
+          fi
+
+      - name: Check for changes
+        id: check-changes
+        run: |
+          git add docs/
+          if git diff --staged --quiet && [ "${{ github.event.inputs.force_sync }}" != "true" ]; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "📝 No changes detected"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "✅ Changes detected"
+          fi
+
+      - name: Commit changes
+        if: steps.check-changes.outputs.has_changes == 'true'
+        run: |
+          git commit -m "📚 Sync docs from main repo
+
+          Source: Baa@${{ steps.main-repo-info.outputs.commit_sha }}
+          Original: ${{ steps.main-repo-info.outputs.commit_message }}
+          Author: ${{ steps.main-repo-info.outputs.commit_author }}
+          
+          [skip ci]"
+
+      - name: Push changes
+        if: steps.check-changes.outputs.has_changes == 'true'
+        run: |
+          git push origin master
+          echo "✅ Changes pushed to baa-wiki"
+
+      - name: Clean up
+        if: always()
+        run: |
+          rm -rf temp-baa
+          echo "✅ Cleanup completed"
+
+      - name: Trigger deployment
+        if: steps.check-changes.outputs.has_changes == 'true'
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.SYNC_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/dispatches \
+            -d '{"event_type":"deploy-wiki"}'
