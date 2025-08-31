@@ -2,9 +2,16 @@ export default {
   title: 'لغة باء',
   titleTemplate: ':title | Baa Programming Language',
   description: 'لغة برمجة عربية حديثة - Modern Arabic Programming Language',
-  ignoreDeadLinks: true,
+  ignoreDeadLinks: [
+    // Ignore all relative links that don't exist yet
+    /^\.\/.*$/,
+    /^\.\.\/.*$/,
+    // Ignore specific patterns
+    'LICENSE',
+    /.*%D.*/, // Ignore URL-encoded links
+  ],
   
-  // Base path for GitHub Pages deployment
+  // Base path for deployment
   base: '/baa-wiki/',
   
   head: [
@@ -166,18 +173,30 @@ export default {
   },
 
   markdown: {
-    config: (md) => {
-      // Custom Baa syntax highlighting will be added here
-      // md.use(require('./plugins/baa-highlighter'))
+    shiki: {
+      langAlias: {
+        'baa': 'c',
+        'ebnf': 'text'
+      }
     }
   },
 
-  // Optimize for Arabic content
+  // Optimize for Arabic content and asset handling
   vite: {
     optimizeDeps: {
       include: ['vue']
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          assetFileNames: 'assets/[name].[hash].[ext]'
+        }
+      }
     }
-  }
+  },
+  
+  // Ensure clean URLs and proper routing
+  cleanUrls: true
 }
 
 function getArabicSidebar() {
