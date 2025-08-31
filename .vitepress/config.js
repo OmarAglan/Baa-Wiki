@@ -16,16 +16,29 @@ export default {
   
   head: [
     ['link', { rel: 'icon', href: '/baa-wiki/favicon.ico' }],
-    ['meta', { name: 'theme-color', content: '#3c4043' }],
+    ['meta', { name: 'theme-color', content: '#d4af37' }],
     ['meta', { property: 'og:title', content: 'لغة باء - Baa Language' }],
     ['meta', { property: 'og:description', content: 'لغة برمجة عربية حديثة' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:locale', content: 'ar_SA' }],
     ['meta', { property: 'og:locale:alternate', content: 'en_US' }],
-    // Arabic fonts
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:title', content: 'لغة باء - Baa Programming Language' }],
+    ['meta', { name: 'twitter:description', content: 'لغة برمجة عربية حديثة' }],
+    ['meta', { name: 'keywords', content: 'لغة برمجة, عربية, باء, برمجة, مطورين عرب, arabic programming language' }],
+    ['meta', { name: 'author', content: 'Baa Language Team' }],
+    ['meta', { name: 'robots', content: 'index, follow' }],
+    ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0' }],
+    // Arabic fonts with preload for better performance
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
-    ['link', { href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500&display=swap', rel: 'stylesheet' }]
+    ['link', { href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500&display=swap', rel: 'stylesheet' }],
+    // PWA manifest
+    ['link', { rel: 'manifest', href: '/baa-wiki/manifest.json' }],
+    ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
+    ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'default' }],
+    ['meta', { name: 'apple-mobile-web-app-title', content: 'لغة باء' }],
+    ['link', { rel: 'apple-touch-icon', href: '/baa-wiki/logo-192.png' }]
   ],
 
   // Arabic as default, English as secondary
@@ -119,6 +132,19 @@ export default {
               }
             }
           }
+        },
+
+        // Enhanced social links
+        socialLinks: [
+          { icon: 'github', link: 'https://github.com/OmarAglan/Baa' },
+          { icon: 'twitter', link: 'https://twitter.com/baa_language' },
+          { icon: 'discord', link: 'https://discord.gg/baa-lang' }
+        ],
+
+        // Enhanced outline
+        outline: {
+          level: [2, 3],
+          label: 'جدول المحتويات'
         }
       }
     },
@@ -167,6 +193,19 @@ export default {
         footer: {
           message: 'Released under the MIT License',
           copyright: 'Copyright © 2024 Baa Language Team'
+        },
+
+        // Enhanced social links
+        socialLinks: [
+          { icon: 'github', link: 'https://github.com/OmarAglan/Baa' },
+          { icon: 'twitter', link: 'https://twitter.com/baa_language' },
+          { icon: 'discord', link: 'https://discord.gg/baa-lang' }
+        ],
+
+        // Enhanced outline
+        outline: {
+          level: [2, 3],
+          label: 'Table of Contents'
         }
       }
     }
@@ -177,26 +216,105 @@ export default {
       langAlias: {
         'baa': 'c',
         'ebnf': 'text'
+      },
+      theme: {
+        light: 'github-light',
+        dark: 'github-dark'
       }
+    },
+    // Enhanced markdown configuration
+    lineNumbers: true,
+    breaks: true,
+    linkify: true,
+    typographer: true,
+    toc: {
+      level: [2, 3],
+      containerTag: 'nav',
+      containerClass: 'table-of-contents',
+      listTag: 'ul',
+      listClass: 'toc-list',
+      itemTag: 'li',
+      itemClass: 'toc-item',
+      linkTag: 'a',
+      linkClass: 'toc-link'
     }
   },
 
-  // Optimize for Arabic content and asset handling
+  // Enhanced Vite configuration for better performance
   vite: {
     optimizeDeps: {
-      include: ['vue']
+      include: ['vue', 'vue-router']
     },
     build: {
       rollupOptions: {
         output: {
-          assetFileNames: 'assets/[name].[hash].[ext]'
+          assetFileNames: 'assets/[name].[hash].[ext]',
+          chunkFileNames: 'assets/[name].[hash].js',
+          entryFileNames: 'assets/[name].[hash].js'
         }
+      },
+      // Enable source maps for development
+      sourcemap: true,
+      // Optimize chunk size
+      chunkSizeWarningLimit: 1000
+    },
+    // Enhanced CSS handling
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@import "./.vitepress/theme/styles/variables.scss";`
+        }
+      }
+    },
+    // Enhanced server configuration
+    server: {
+      fs: {
+        allow: ['..']
       }
     }
   },
   
   // Ensure clean URLs and proper routing
-  cleanUrls: true
+  cleanUrls: true,
+
+  // Enhanced sitemap configuration
+  sitemap: {
+    hostname: 'https://omaraglan.github.io',
+    transformItems(items) {
+      return items.map(item => ({
+        ...item,
+        lastmod: new Date().toISOString()
+      }))
+    }
+  },
+
+  // Enhanced RSS configuration
+  transformHtml: (_, id, { pageData }) => {
+    if (!/[\\/]404\.html$/.test(id)) {
+      // Add structured data for better SEO
+      const structuredData = {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: pageData.title,
+        description: pageData.description,
+        url: `https://omaraglan.github.io/baa-wiki${pageData.relativePath}`,
+        inLanguage: pageData.lang || 'ar-SA',
+        dateModified: new Date().toISOString()
+      }
+
+      return {
+        headTags: [
+          {
+            tag: 'script',
+            attrs: {
+              type: 'application/ld+json'
+            },
+            children: JSON.stringify(structuredData)
+          }
+        ]
+      }
+    }
+  }
 }
 
 function getArabicSidebar() {

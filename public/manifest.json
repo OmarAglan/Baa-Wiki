@@ -1,0 +1,97 @@
+{
+  "name": "لغة باء - Baa Programming Language",
+  "short_name": "لغة باء",
+  "description": "لغة برمجة عربية حديثة - Modern Arabic Programming Language",
+  "start_url": "/baa-wiki/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#d4af37",
+  "orientation": "portrait-primary",
+  "scope": "/baa-wiki/",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/baa-wiki/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/baa-wiki/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/baa-wiki/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/baa-wiki/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["education", "productivity", "developer"],
+  "screenshots": [
+    {
+      "src": "/baa-wiki/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/baa-wiki/screenshot-narrow.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "البداية السريعة",
+      "short_name": "البداية",
+      "description": "ابدأ رحلتك مع لغة باء",
+      "url": "/baa-wiki/00_نظرة_عامة/البداية_السريعة",
+      "icons": [
+        {
+          "src": "/baa-wiki/icon-quickstart.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "مواصفات اللغة",
+      "short_name": "المواصفات",
+      "description": "تعرف على قواعد لغة باء",
+      "url": "/baa-wiki/01_مواصفات_اللغة/",
+      "icons": [
+        {
+          "src": "/baa-wiki/icon-spec.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "أمثلة وتطبيقات",
+      "short_name": "الأمثلة",
+      "description": "اكتشف أمثلة عملية",
+      "url": "/baa-wiki/04_أمثلة_وتطبيقات/",
+      "icons": [
+        {
+          "src": "/baa-wiki/icon-examples.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "web",
+      "url": "https://omaraglan.github.io/baa-wiki/"
+    }
+  ],
+  "prefer_related_applications": false
+}

@@ -1,18 +1,18 @@
 /**
- * Arabic-First Custom Theme for Baa Language Documentation
- * Optimized for RTL reading and Arabic typography
+ * Enhanced Arabic-First Custom Theme for Baa Language Documentation
+ * Optimized for RTL reading and Arabic typography with modern design
  */
 
-/* Import Arabic fonts */
+/* Import Arabic fonts with display=swap for better performance */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500&display=swap');
 
-/* Root CSS Variables for Arabic Theme */
+/* Root CSS Variables for Enhanced Arabic Theme */
 :root {
   /* Arabic Typography */
   --vp-font-family-base: 'Noto Sans Arabic', 'Segoe UI', 'Roboto', sans-serif;
   --vp-font-family-mono: 'Fira Code', 'Consolas', 'Monaco', monospace;
   
-  /* Arabic-specific colors */
+  /* Enhanced Arabic-specific colors with gradients */
   --vp-c-brand: #d4af37; /* Arabic gold */
   --vp-c-brand-light: #e6c96b;
   --vp-c-brand-lighter: #f2e39f;
@@ -20,26 +20,52 @@
   --vp-c-brand-darker: #9c7d1a;
   --vp-c-brand-dimm: rgba(212, 175, 55, 0.08);
   
+  /* Modern gradient backgrounds */
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-alt: #f8f9fa;
+  --vp-c-bg-elv: #ffffff;
+  --vp-c-bg-soft: rgba(212, 175, 55, 0.05);
+  
   /* Enhanced contrast for Arabic text */
   --vp-c-text-1: rgba(60, 60, 67, 0.95);
   --vp-c-text-2: rgba(60, 60, 67, 0.85);
+  --vp-c-text-3: rgba(60, 60, 67, 0.65);
   
-  /* Spacing adjustments for Arabic */
-  --vp-layout-max-width: 1280px;
+  /* Improved spacing and layout */
+  --vp-layout-max-width: 1440px;
+  --vp-sidebar-width: 272px;
+  
+  /* Enhanced shadows and borders */
+  --vp-c-divider: rgba(60, 60, 67, 0.12);
+  --vp-c-divider-light: rgba(60, 60, 67, 0.08);
+  
+  /* Animation variables */
+  --vp-transition-duration: 0.3s;
+  --vp-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Dark mode Arabic colors */
+/* Dark mode enhanced colors */
 .dark {
   --vp-c-brand: #f4d03f;
   --vp-c-brand-light: #f7dc6f;
   --vp-c-brand-lighter: #fbeaa7;
   --vp-c-brand-dark: #d4af37;
   --vp-c-brand-darker: #b8941f;
+  
+  --vp-c-bg: #1a1a1a;
+  --vp-c-bg-alt: #161616;
+  --vp-c-bg-elv: #242424;
+  --vp-c-bg-soft: rgba(244, 208, 63, 0.05);
+  
   --vp-c-text-1: rgba(255, 255, 245, 0.95);
   --vp-c-text-2: rgba(235, 235, 245, 0.85);
+  --vp-c-text-3: rgba(235, 235, 245, 0.65);
+  
+  --vp-c-divider: rgba(84, 84, 88, 0.48);
+  --vp-c-divider-light: rgba(84, 84, 88, 0.24);
 }
 
-/* RTL Layout Improvements */
+/* Enhanced RTL Layout Improvements */
 [dir="rtl"] {
   text-align: right;
 }
@@ -69,26 +95,29 @@
   text-align: left;
 }
 
-/* Arabic Typography Enhancements */
+/* Enhanced Arabic Typography */
 .VPDoc h1, .VPDoc h2, .VPDoc h3, .VPDoc h4, .VPDoc h5, .VPDoc h6 {
   font-weight: 600;
   line-height: 1.4;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
 }
 
 [dir="rtl"] .VPDoc h1, [dir="rtl"] .VPDoc h2, [dir="rtl"] .VPDoc h3 {
   letter-spacing: -0.02em;
 }
 
-/* Better line height for Arabic text */
+/* Improved line height for Arabic text */
 .VPDoc p, .VPDoc li {
   line-height: 1.75;
+  margin-bottom: 1rem;
 }
 
 [dir="rtl"] .VPDoc p, [dir="rtl"] .VPDoc li {
   line-height: 1.8;
 }
 
-/* Baa Language Code Highlighting */
+/* Enhanced Baa Language Code Highlighting */
 .language-baa .token.keyword {
   color: #d73a49; /* Red for Arabic keywords */
   font-weight: 600;
@@ -98,9 +127,12 @@
   color: #032f62; /* Blue for strings */
 }
 
-.language-baa .token.arabic-number {
-  color: #005cc5; /* Teal for Arabic-Indic numbers */
-  font-weight: 500;
+.language-baa .token.function {
+  color: #6f42c1; /* Purple for functions */
+}
+
+.language-baa .token.number {
+  color: #005cc5; /* Blue for numbers */
 }
 
 .language-baa .token.comment {
@@ -108,157 +140,276 @@
   font-style: italic;
 }
 
-.language-baa .token.function {
-  color: #6f42c1; /* Purple for functions */
-  font-weight: 500;
+/* Enhanced Navigation */
+.VPNav {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid var(--vp-c-divider-light);
+  transition: all var(--vp-transition-duration) var(--vp-transition-timing);
 }
 
-.language-baa .token.arabic-identifier {
-  color: #e36209; /* Orange for Arabic identifiers */
+.dark .VPNav {
+  background: rgba(26, 26, 26, 0.9);
 }
 
-/* Dark mode Baa syntax highlighting */
-.dark .language-baa .token.keyword {
-  color: #ff7b72;
+/* Enhanced Hero Section */
+.VPHomeHero {
+  background: linear-gradient(135deg, var(--vp-c-brand-dimm) 0%, rgba(212, 175, 55, 0.02) 100%);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  margin: 2rem 0;
+  text-align: center;
 }
 
-.dark .language-baa .token.string {
-  color: #a5d6ff;
+.VPHomeHero .container {
+  max-width: 960px;
+  margin: 0 auto;
 }
 
-.dark .language-baa .token.arabic-number {
-  color: #79c0ff;
+.VPHomeHero .name {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--vp-c-brand) 0%, var(--vp-c-brand-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
 }
 
-.dark .language-baa .token.comment {
-  color: #8b949e;
+.VPHomeHero .text {
+  font-size: 1.5rem;
+  color: var(--vp-c-text-2);
+  margin-bottom: 1.5rem;
 }
 
-.dark .language-baa .token.function {
-  color: #d2a8ff;
+.VPHomeHero .tagline {
+  font-size: 1.1rem;
+  color: var(--vp-c-text-3);
+  margin-bottom: 2rem;
 }
 
-.dark .language-baa .token.arabic-identifier {
-  color: #ffa657;
+/* Enhanced Action Buttons */
+.VPHomeHero .actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-/* Code block improvements for Arabic context */
-.vp-code-group {
-  direction: ltr; /* Keep code blocks LTR even in RTL context */
-}
-
-[dir="rtl"] .vp-code-group {
-  text-align: left;
-}
-
-/* Custom components styling */
-.baa-example {
-  border: 1px solid var(--vp-c-divider);
+.VPHomeHero .action {
+  padding: 0.75rem 1.5rem;
   border-radius: 8px;
-  overflow: hidden;
-  margin: 1.5rem 0;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all var(--vp-transition-duration) var(--vp-transition-timing);
+  border: 2px solid transparent;
 }
 
-.baa-example-header {
-  background: var(--vp-c-bg-soft);
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--vp-c-divider);
-  font-weight: 500;
+.VPHomeHero .action.brand {
+  background: linear-gradient(135deg, var(--vp-c-brand) 0%, var(--vp-c-brand-light) 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.VPHomeHero .action.brand:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
+}
+
+.VPHomeHero .action.alt {
+  background: transparent;
+  color: var(--vp-c-brand);
+  border-color: var(--vp-c-brand);
+}
+
+.VPHomeHero .action.alt:hover {
+  background: var(--vp-c-brand-dimm);
+  transform: translateY(-2px);
+}
+
+/* Enhanced Features Section */
+.VPHomeFeatures {
+  padding: 4rem 0;
+}
+
+.VPHomeFeatures .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.VPHomeFeatures .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.VPHomeFeatures .item {
+  background: var(--vp-c-bg-elv);
+  border: 1px solid var(--vp-c-divider-light);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: all var(--vp-transition-duration) var(--vp-transition-timing);
+  text-align: center;
+}
+
+.VPHomeFeatures .item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+  border-color: var(--vp-c-brand-light);
+}
+
+.VPHomeFeatures .icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.VPHomeFeatures .title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
   color: var(--vp-c-text-1);
 }
 
-.baa-example-code {
-  background: var(--vp-code-block-bg);
-}
-
-.baa-example-output {
-  background: var(--vp-c-bg-alt);
-  padding: 1rem;
-  border-top: 1px solid var(--vp-c-divider);
-  font-family: var(--vp-font-family-mono);
-  font-size: 0.875rem;
-}
-
-/* Navigation improvements for Arabic */
-[dir="rtl"] .VPNavBar .content .title {
-  margin-right: 0;
-  margin-left: 1.5rem;
-}
-
-[dir="rtl"] .VPNavBarTitle .text {
-  padding-left: 0;
-  padding-right: 0.5rem;
-}
-
-/* Search box RTL */
-[dir="rtl"] .VPNavBarSearch {
-  margin-right: 0;
-  margin-left: auto;
-}
-
-/* Footer adjustments */
-[dir="rtl"] .VPFooter {
-  text-align: right;
-}
-
-[dir="rtl"] .prev-next .prev,
-[dir="rtl"] .prev-next .next {
-  direction: rtl;
-}
-
-/* Hero section Arabic optimizations */
-.VPHero .text {
-  font-size: clamp(2.5rem, 8vw, 4rem);
-  font-weight: 700;
-  line-height: 1.1;
-}
-
-[dir="rtl"] .VPHero .text {
-  letter-spacing: -0.02em;
-}
-
-[dir="rtl"] .VPHero .tagline {
+.VPHomeFeatures .details {
+  color: var(--vp-c-text-2);
   line-height: 1.6;
 }
 
-/* Feature cards RTL */
-[dir="rtl"] .VPFeatures .item {
-  text-align: right;
+/* Enhanced Code Blocks */
+.VPDoc .content .content-container .content {
+  max-width: 100%;
 }
 
-[dir="rtl"] .VPFeatures .icon {
-  margin-left: 0;
-  margin-right: 0;
+.VPDoc .content .content-container .content .vp-raw {
+  margin: 1.5rem 0;
 }
 
-/* Responsive Arabic typography */
+.VPDoc .content .content-container .content .vp-raw .shiki {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--vp-c-divider-light);
+}
+
+/* Enhanced Sidebar */
+.VPSidebar {
+  background: var(--vp-c-bg-soft);
+  backdrop-filter: blur(10px);
+}
+
+.VPSidebarItem .item {
+  border-radius: 6px;
+  margin: 0.25rem 0;
+  transition: all var(--vp-transition-duration) var(--vp-transition-timing);
+}
+
+.VPSidebarItem .item:hover {
+  background: var(--vp-c-brand-dimm);
+}
+
+.VPSidebarItem .item.active {
+  background: var(--vp-c-brand-dimm);
+  color: var(--vp-c-brand);
+  font-weight: 500;
+}
+
+/* Enhanced Search */
+.VPLocalSearchBox {
+  border-radius: 8px;
+  border: 1px solid var(--vp-c-divider-light);
+  transition: all var(--vp-transition-duration) var(--vp-transition-timing);
+}
+
+.VPLocalSearchBox:focus-within {
+  border-color: var(--vp-c-brand);
+  box-shadow: 0 0 0 3px var(--vp-c-brand-dimm);
+}
+
+/* Enhanced Mobile Responsiveness */
 @media (max-width: 768px) {
-  :root {
-    --vp-font-size-base: 16px;
+  .VPHomeHero .name {
+    font-size: 2rem;
   }
   
-  [dir="rtl"] .VPDoc p, [dir="rtl"] .VPDoc li {
-    line-height: 1.7;
+  .VPHomeHero .text {
+    font-size: 1.25rem;
+  }
+  
+  .VPHomeHero .actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .VPHomeFeatures .grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .VPHomeFeatures .item {
+    padding: 1.5rem;
   }
 }
 
-/* Accessibility improvements for Arabic */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+/* Enhanced Loading States */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+  transition: opacity var(--vp-transition-duration) var(--vp-transition-timing);
+}
+
+/* Enhanced Focus States */
+*:focus {
+  outline: 2px solid var(--vp-c-brand);
+  outline-offset: 2px;
+}
+
+/* Enhanced Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--vp-c-bg-soft);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--vp-c-divider);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vp-c-divider-light);
+}
+
+/* Enhanced Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Print styles for Arabic documentation */
+.VPHomeHero,
+.VPHomeFeatures .item {
+  animation: fadeInUp 0.6s var(--vp-transition-timing);
+}
+
+/* Enhanced Print Styles */
 @media print {
-  [dir="rtl"] body {
-    direction: rtl;
-    text-align: right;
+  .VPNav,
+  .VPSidebar,
+  .VPContent .content .content-container .content .vp-raw .shiki {
+    display: none !important;
   }
   
-  .VPSidebar, .VPNavBar {
-    display: none !important;
+  .VPDoc .content .content-container .content {
+    max-width: none !important;
   }
 }

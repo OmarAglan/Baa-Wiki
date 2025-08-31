@@ -1,5 +1,8 @@
 <template>
   <Layout>
+    <!-- Progress Indicator -->
+    <ProgressIndicator />
+    
     <!-- Custom Arabic-optimized layout wrapper -->
     <template #doc-before>
       <div class="arabic-doc-wrapper">
@@ -49,12 +52,124 @@
 <script setup>
 import DefaultTheme from 'vitepress/theme'
 import { useRoute } from 'vitepress'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
+import ProgressIndicator from './components/ProgressIndicator.vue'
 
 const { Layout } = DefaultTheme
 
 const route = useRoute()
 const isEnglish = computed(() => route.path.startsWith('/en/'))
+
+// Register service worker for PWA functionality
+onMounted(() => {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/baa-wiki/sw.js')
+        .then(registration => {
+          console.log('Service Worker registered successfully:', registration.scope)
+          
+          // Check for updates
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // New content is available, show update notification
+                showUpdateNotification()
+              }
+            })
+          })
+        })
+        .catch(error => {
+          console.error('Service Worker registration failed:', error)
+        })
+    })
+  }
+})
+
+const showUpdateNotification = () => {
+  // Create update notification
+  const notification = document.createElement('div')
+  notification.className = 'update-notification'
+  notification.innerHTML = `
+    <div class="update-content">
+      <span>🔄 تحديث جديد متاح!</span>
+      <button onclick="window.location.reload()">تحديث الآن</button>
+      <button onclick="this.parentElement.parentElement.remove()">لاحقاً</button>
+    </div>
+  `
+  
+  // Add styles
+  const style = document.createElement('style')
+  style.textContent = `
+    .update-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--vp-c-brand);
+      color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      animation: slideInUp 0.3s ease;
+    }
+    
+    .update-content {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .update-content button {
+      padding: 0.25rem 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: transparent;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.75rem;
+    }
+    
+    .update-content button:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    @keyframes slideInUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .update-notification {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+      }
+      
+      .update-content {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  `
+  
+  document.head.appendChild(style)
+  document.body.appendChild(notification)
+  
+  // Auto-remove after 10 seconds
+  setTimeout(() => {
+    if (notification.parentElement) {
+      notification.remove()
+    }
+  }, 10000)
+}
 </script>
 
 <style scoped>

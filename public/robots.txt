@@ -1,0 +1,29 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://omaraglan.github.io/baa-wiki/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
+
+# Disallow admin and private areas (if any)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /_/
+
+# Allow important pages
+Allow: /baa-wiki/
+Allow: /baa-wiki/00_نظرة_عامة/
+Allow: /baa-wiki/01_مواصفات_اللغة/
+Allow: /baa-wiki/02_معمارية_المترجم/
+Allow: /baa-wiki/03_التطوير/
+Allow: /baa-wiki/04_أمثلة_وتطبيقات/
+
+# Allow English pages
+Allow: /baa-wiki/en/
+Allow: /baa-wiki/en/00_OVERVIEW/
+Allow: /baa-wiki/en/01_LANGUAGE_SPECIFICATION/
+Allow: /baa-wiki/en/02_COMPILER_ARCHITECTURE/
+Allow: /baa-wiki/en/03_DEVELOPMENT/
+Allow: /baa-wiki/en/04_EXAMPLES_APPLICATIONS/

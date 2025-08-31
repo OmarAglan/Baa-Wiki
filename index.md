@@ -101,200 +101,131 @@ cd مشروعي
 }
 ```
 
-## 📖 تعلّم المزيد
+## 🔧 محرر باء التفاعلي
 
-<div class="learning-grid">
-  <div class="learning-card">
-    <h3>🚀 البداية السريعة</h3>
-    <p>ابدأ رحلتك مع لغة باء في دقائق معدودة</p>
-    <a href="/00_نظرة_عامة/البداية_السريعة" class="card-link">ابدأ الآن ←</a>
-  </div>
-  
-  <div class="learning-card">
-    <h3>📋 مواصفات اللغة</h3>
-    <p>تعرّف على قواعد ومفاهيم لغة باء بالتفصيل</p>
-    <a href="/01_مواصفات_اللغة/" class="card-link">استكشف ←</a>
-  </div>
-  
-  <div class="learning-card">
-    <h3>🏗️ معمارية المترجم</h3>
-    <p>فهم كيفية عمل مترجم لغة باء من الداخل</p>
-    <a href="/02_معمارية_المترجم/" class="card-link">تعلّم ←</a>
-  </div>
-  
-  <div class="learning-card">
-    <h3>💼 أمثلة عملية</h3>
-    <p>اكتشف قوة لغة باء من خلال مشاريع حقيقية</p>
-    <a href="/04_أمثلة_وتطبيقات/" class="card-link">استكشف ←</a>
-  </div>
-</div>
+جرب كتابة وتشغيل كود باء مباشرة في المتصفح:
 
-## 🤝 انضم للمجتمع
+<BaaPlayground />
 
-<div class="community-section">
-  <div class="community-stats">
-    <div class="stat">
-      <div class="stat-number">٧٥٠+</div>
-      <div class="stat-label">مطور</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">١٢٠+</div>
-      <div class="stat-label">مساهمة</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">٢٥+</div>
-      <div class="stat-label">مشروع</div>
-    </div>
-  </div>
-  
-  <div class="community-links">
-    <a href="https://github.com/OmarAglan/Baa" class="community-link github">
-      <span class="icon">📦</span>
-      <span>GitHub</span>
-    </a>
-    <a href="https://github.com/OmarAglan/Baa/discussions" class="community-link discussions">
-      <span class="icon">💬</span>
-      <span>المناقشات</span>
-    </a>
-    <a href="https://discord.gg/baa-lang" class="community-link discord">
-      <span class="icon">💭</span>
-      <span>Discord</span>
-    </a>
-  </div>
-</div>
+## 🎯 المميزات الرئيسية
+
+### 📝 نحو عربي طبيعي
+```baa
+// بدلاً من: function calculateSum(a, b) { return a + b; }
+دالة حساب_المجموع(أ, ب) {
+    إرجاع أ + ب;
+}
+
+// بدلاً من: if (condition) { doSomething(); }
+إذا (الشرط) {
+    افعل_شيئاً();
+}
+```
+
+### 🔢 دعم الأرقام العربية
+```baa
+متغير عدد_أول = ١;
+متغير عدد_ثاني = ٢;
+متغير مجموع = عدد_أول + عدد_ثاني; // النتيجة: ٣
+```
+
+### 🌐 دعم كامل للعربية
+```baa
+متغير رسالة = "مرحباً بالعالم!";
+متغير اسم_المستخدم = "أحمد";
+اطبع("أهلاً وسهلاً " + اسم_المستخدم);
+```
+
+## 🛠️ الأدوات المتاحة
+
+### 📦 مدير الحزم
+```bash
+# تثبيت مكتبة
+باء تثبيت مكتبة_الويب
+
+# إضافة تبعية
+باء إضافة مكتبة_قاعدة_البيانات
+```
+
+### 🔧 نظام البناء
+```bash
+# بناء المشروع
+باء بناء
+
+# تشغيل في وضع التطوير
+باء تشغيل --تطوير
+
+# بناء للإنتاج
+باء بناء --إنتاج
+```
+
+### 🐛 أدوات التصحيح
+```bash
+# تشغيل مع التصحيح
+باء تشغيل --تصحيح
+
+# فحص الأخطاء
+باء فحص
+```
+
+## 📚 التعلم والتطوير
+
+### 🎓 دليل المبتدئين
+ابدأ رحلتك مع لغة باء من خلال [دليل المبتدئين](/00_نظرة_عامة/البداية_السريعة) الذي يغطي:
+
+- تثبيت لغة باء
+- كتابة أول برنامج
+- المفاهيم الأساسية
+- أمثلة عملية
+
+### 🔍 مواصفات اللغة
+تعرف على [مواصفات لغة باء](/01_مواصفات_اللغة/) بالتفصيل:
+
+- النحو والقواعد
+- أنواع البيانات
+- هياكل التحكم
+- الدوال والمكتبات
+
+### 🏗️ معمارية المترجم
+اكتشف [معمارية مترجم باء](/02_معمارية_المترجم/):
+
+- مراحل الترجمة
+- تحليل الكود
+- توليد الكود
+- التحسينات
+
+### 👥 المساهمة
+ساهم في تطوير لغة باء من خلال:
+
+- [الإبلاغ عن الأخطاء](https://github.com/OmarAglan/Baa/issues)
+- [اقتراح ميزات جديدة](https://github.com/OmarAglan/Baa/discussions)
+- [المساهمة في الكود](https://github.com/OmarAglan/Baa/pulls)
+- [تحسين التوثيق](https://github.com/OmarAglan/baa-wiki)
+
+## 🌟 المجتمع
+
+انضم إلى مجتمع لغة باء النشط:
+
+- **GitHub**: [OmarAglan/Baa](https://github.com/OmarAglan/Baa)
+- **المناقشات**: [GitHub Discussions](https://github.com/OmarAglan/Baa/discussions)
+- **التحديثات**: [GitHub Releases](https://github.com/OmarAglan/Baa/releases)
+- **المساعدة**: [GitHub Issues](https://github.com/OmarAglan/Baa/issues)
+
+## 📄 الترخيص
+
+لغة باء مرخصة تحت [رخصة MIT](https://github.com/OmarAglan/Baa/blob/main/LICENSE) مما يعني:
+
+- ✅ استخدام مجاني
+- ✅ تعديل وتوزيع مجاني
+- ✅ استخدام تجاري مجاني
+- ✅ مسؤولية محدودة
+
+## 📤 شارك مع الأصدقاء
+
+<SocialShare />
 
 ---
 
-<div style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--vp-c-bg-soft); border-radius: 12px;">
-  <h3>💡 هل أنت مستعد للبدء؟</h3>
-  <p>انضم إلى ثورة البرمجة العربية واكتب أول برنامج لك بلغة باء اليوم!</p>
-  <a href="/00_نظرة_عامة/البداية_السريعة" style="display: inline-block; margin-top: 1rem; padding: 0.75rem 2rem; background: var(--vp-c-brand); color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">ابدأ رحلتك الآن 🚀</a>
-</div>
+**🚀 ابدأ رحلتك مع لغة باء اليوم!**
 
-<style scoped>
-.learning-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  margin: 2rem 0;
-}
-
-.learning-card {
-  background: var(--vp-c-bg-soft);
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 12px;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-}
-
-.learning-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  border-color: var(--vp-c-brand);
-}
-
-.learning-card h3 {
-  margin: 0 0 0.5rem 0;
-  color: var(--vp-c-text-1);
-}
-
-.learning-card p {
-  margin: 0 0 1rem 0;
-  color: var(--vp-c-text-2);
-  line-height: 1.6;
-}
-
-.card-link {
-  color: var(--vp-c-brand);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.card-link:hover {
-  color: var(--vp-c-brand-dark);
-}
-
-.community-section {
-  background: linear-gradient(135deg, var(--vp-c-bg-soft) 0%, var(--vp-c-bg-alt) 100%);
-  border-radius: 16px;
-  padding: 2rem;
-  margin: 3rem 0;
-  text-align: center;
-}
-
-.community-stats {
-  display: flex;
-  justify-content: center;
-  gap: 3rem;
-  margin-bottom: 2rem;
-}
-
-.stat {
-  text-align: center;
-}
-
-.stat-number {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--vp-c-brand);
-  line-height: 1;
-}
-
-.stat-label {
-  font-size: 0.875rem;
-  color: var(--vp-c-text-2);
-  margin-top: 0.25rem;
-}
-
-.community-links {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.community-link {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: var(--vp-c-bg);
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 8px;
-  text-decoration: none;
-  color: var(--vp-c-text-1);
-  transition: all 0.2s;
-}
-
-.community-link:hover {
-  background: var(--vp-c-brand);
-  color: white;
-  border-color: var(--vp-c-brand);
-  transform: translateY(-1px);
-}
-
-.community-link .icon {
-  font-size: 1.25rem;
-}
-
-@media (max-width: 768px) {
-  .community-stats {
-    gap: 1.5rem;
-  }
-  
-  .stat-number {
-    font-size: 2rem;
-  }
-  
-  .community-links {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .community-link {
-    width: 200px;
-    justify-content: center;
-  }
-}
-</style>
+[البداية السريعة](/00_نظرة_عامة/البداية_السريعة) • [GitHub](https://github.com/OmarAglan/Baa) • [المساهمة](https://github.com/OmarAglan/Baa/discussions)
