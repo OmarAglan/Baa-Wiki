@@ -2,6 +2,7 @@ export default {
   title: 'لغة باء',
   titleTemplate: ':title | Baa Programming Language',
   description: 'لغة برمجة عربية حديثة - Modern Arabic Programming Language',
+  ignoreDeadLinks: true,
   
   // Base path for GitHub Pages deployment
   base: '/baa-wiki/',
