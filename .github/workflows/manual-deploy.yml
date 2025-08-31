@@ -1,0 +1,222 @@
+name: Manual Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+      force_rebuild:
+        description: 'Force rebuild without cache'
+        required: false
+        default: false
+        type: boolean
+      skip_tests:
+        description: 'Skip validation tests'
+        required: false
+        default: false
+        type: boolean
+
+# Sets permissions for GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  pull-requests: write
+
+# Allow only one deployment at a time
+concurrency:
+  group: "manual-deploy"
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    if: ${{ !inputs.skip_tests }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          echo "✅ Dependencies installed"
+
+      - name: Run validation tests
+        run: |
+          echo "🧪 Running validation tests..."
+          
+          # Check VitePress config
+          npx vitepress --version
+          
+          # Test build
+          npm run build
+          
+          # Check build output
+          if [ ! -d ".vitepress/dist" ] || [ ! "$(ls -A .vitepress/dist)" ]; then
+            echo "❌ Build validation failed"
+            exit 1
+          fi
+          
+          echo "✅ Validation tests passed"
+
+  build:
+    runs-on: ubuntu-latest
+    needs: validate
+    if: ${{ !inputs.skip_tests }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Install dependencies
+        run: |
+          if [ "${{ inputs.force_rebuild }}" == "true" ]; then
+            echo "🔄 Force rebuild - clearing cache"
+            npm cache clean --force
+          fi
+          npm ci
+          echo "✅ Dependencies installed"
+
+      - name: Build VitePress site
+        run: |
+          echo "🔨 Building site for ${{ inputs.environment }}..."
+          npm run build
+          
+          # Verify build
+          if [ ! -d ".vitepress/dist" ]; then
+            echo "❌ Build failed: .vitepress/dist not found"
+            exit 1
+          fi
+          
+          BUILD_SIZE=$(du -sh .vitepress/dist | cut -f1)
+          echo "✅ Build successful! Size: $BUILD_SIZE"
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .vitepress/dist
+
+  build-skip-tests:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.skip_tests }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Install dependencies
+        run: |
+          if [ "${{ inputs.force_rebuild }}" == "true" ]; then
+            echo "🔄 Force rebuild - clearing cache"
+            npm cache clean --force
+          fi
+          npm ci
+          echo "✅ Dependencies installed"
+
+      - name: Build VitePress site
+        run: |
+          echo "🔨 Building site for ${{ inputs.environment }} (skipping tests)..."
+          npm run build
+          
+          # Verify build
+          if [ ! -d ".vitepress/dist" ]; then
+            echo "❌ Build failed: .vitepress/dist not found"
+            exit 1
+          fi
+          
+          BUILD_SIZE=$(du -sh .vitepress/dist | cut -f1)
+          echo "✅ Build successful! Size: $BUILD_SIZE"
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .vitepress/dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    runs-on: ubuntu-latest
+    needs: [build, build-skip-tests]
+    
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
+      - name: Success message
+        run: |
+          echo "🎉 Manual deployment completed successfully!"
+          echo "🌐 Environment: ${{ inputs.environment }}"
+          echo "🔗 URL: ${{ steps.deployment.outputs.page_url }}"
+          echo "📅 Deployed at: $(date)"
+          echo "🔗 Commit: ${{ github.sha }}"
+          echo "👤 Triggered by: ${{ github.actor }}"
+          
+          if [ "${{ inputs.force_rebuild }}" == "true" ]; then
+            echo "🔄 Force rebuild: Yes"
+          fi
+          
+          if [ "${{ inputs.skip_tests }}" == "true" ]; then
+            echo "⚠️  Tests skipped: Yes"
+          fi
+
+      - name: Create deployment summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const summary = `## 🚀 Manual Deployment Summary
+            
+            **Status**: ✅ Successfully deployed
+            **Environment**: ${{ inputs.environment }}
+            **URL**: ${{ steps.deployment.outputs.page_url }}
+            **Triggered by**: @${{ github.actor }}
+            **Commit**: \`${{ github.sha }}\`
+            **Deployed at**: ${new Date().toISOString()}
+            
+            **Options**:
+            - Force rebuild: ${{ inputs.force_rebuild }}
+            - Skip tests: ${{ inputs.skip_tests }}
+            
+            ---
+            *Deployed via GitHub Actions*`;
+            
+            console.log(summary);

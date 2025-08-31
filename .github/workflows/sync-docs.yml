@@ -11,9 +11,18 @@ on:
         description: 'Force sync even if no changes'
         required: false
         default: 'false'
+      source_branch:
+        description: 'Source branch in main repo (default: main)'
+        required: false
+        default: 'main'
   
   repository_dispatch:
     types: [docs-updated]
+
+# Sets permissions for the job
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   sync-docs:
@@ -37,26 +46,58 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
+      - name: Get current branch
+        id: current-branch
+        run: |
+          echo "current_branch=$(git branch --show-current)" >> $GITHUB_OUTPUT
+          echo "Current branch: ${{ steps.current-branch.outputs.current_branch }}"
+
       - name: Clean old docs
         run: |
           if [ -d "docs" ]; then
             rm -rf docs/
             echo "✅ Old docs removed"
+          else
+            echo "ℹ️ No existing docs folder found"
           fi
 
       - name: Clone main Baa repository
+        id: clone-repo
         run: |
-          git clone --depth 1 --single-branch \
+          SOURCE_BRANCH="${{ github.event.inputs.source_branch || 'main' }}"
+          echo "Cloning from branch: $SOURCE_BRANCH"
+          
+          git clone --depth 1 --single-branch --branch "$SOURCE_BRANCH" \
             https://x-access-token:${{ secrets.SYNC_TOKEN }}@github.com/${{ github.repository_owner }}/Baa.git \
             temp-baa
           
-          if [ -d "temp-baa/docs" ]; then
-            cp -r temp-baa/docs ./docs
-            echo "✅ Documentation copied from main repo"
-          else
-            echo "❌ No docs folder found in main repo"
+          if [ ! -d "temp-baa" ]; then
+            echo "❌ Failed to clone repository"
             exit 1
           fi
+          
+          echo "✅ Repository cloned successfully"
+
+      - name: Check for docs folder
+        run: |
+          if [ -d "temp-baa/docs" ]; then
+            echo "✅ Docs folder found in main repo"
+            ls -la temp-baa/docs/
+          else
+            echo "❌ No docs folder found in main repo"
+            echo "Available folders:"
+            ls -la temp-baa/
+            exit 1
+          fi
+
+      - name: Copy documentation
+        run: |
+          cp -r temp-baa/docs ./docs
+          echo "✅ Documentation copied from main repo"
+          
+          # Show what was copied
+          echo "📁 Copied files:"
+          find docs/ -type f | head -20
 
       - name: Get last commit info from main repo
         id: main-repo-info
@@ -68,13 +109,22 @@ jobs:
           echo "$commit_message" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
           echo "commit_author=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
+          echo "commit_date=$(git log -1 --pretty=%cd)" >> $GITHUB_OUTPUT
           cd ..
+          
+          echo "📝 Last commit info:"
+          echo "  SHA: ${{ steps.main-repo-info.outputs.commit_sha }}"
+          echo "  Author: ${{ steps.main-repo-info.outputs.commit_author }}"
+          echo "  Date: ${{ steps.main-repo-info.outputs.commit_date }}"
 
       - name: Process Arabic documentation
         run: |
           if [ -f "scripts/process-docs.js" ]; then
+            echo "🔄 Processing documentation..."
             node scripts/process-docs.js
             echo "✅ Documentation processed"
+          else
+            echo "ℹ️ No processing script found, skipping"
           fi
 
       - name: Check for changes
@@ -87,23 +137,35 @@ jobs:
           else
             echo "has_changes=true" >> $GITHUB_OUTPUT
             echo "✅ Changes detected"
+            
+            # Show what changed
+            echo "📋 Changes summary:"
+            git diff --staged --name-only | head -10
           fi
 
       - name: Commit changes
         if: steps.check-changes.outputs.has_changes == 'true'
         run: |
-          git commit -m "📚 Sync docs from main repo
+          COMMIT_MSG="📚 Sync docs from main repo
 
           Source: Baa@${{ steps.main-repo-info.outputs.commit_sha }}
+          Branch: ${{ github.event.inputs.source_branch || 'main' }}
           Original: ${{ steps.main-repo-info.outputs.commit_message }}
           Author: ${{ steps.main-repo-info.outputs.commit_author }}
+          Date: ${{ steps.main-repo-info.outputs.commit_date }}
           
           [skip ci]"
+          
+          git commit -m "$COMMIT_MSG"
+          echo "✅ Changes committed"
 
       - name: Push changes
         if: steps.check-changes.outputs.has_changes == 'true'
         run: |
-          git push origin master
+          CURRENT_BRANCH="${{ steps.current-branch.outputs.current_branch }}"
+          echo "Pushing to branch: $CURRENT_BRANCH"
+          
+          git push origin "$CURRENT_BRANCH"
           echo "✅ Changes pushed to baa-wiki"
 
       - name: Clean up
@@ -115,8 +177,25 @@ jobs:
       - name: Trigger deployment
         if: steps.check-changes.outputs.has_changes == 'true'
         run: |
+          echo "🚀 Triggering deployment..."
           curl -X POST \
             -H "Authorization: token ${{ secrets.SYNC_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/${{ github.repository }}/dispatches \
             -d '{"event_type":"deploy-wiki"}'
+          echo "✅ Deployment triggered"
+
+      - name: Success summary
+        if: steps.check-changes.outputs.has_changes == 'true'
+        run: |
+          echo "🎉 Sync completed successfully!"
+          echo "📝 Changes committed and pushed"
+          echo "🚀 Deployment triggered"
+          echo "📅 Sync completed at: $(date)"
+
+      - name: No changes summary
+        if: steps.check-changes.outputs.has_changes == 'false'
+        run: |
+          echo "ℹ️ No changes detected"
+          echo "📅 Sync completed at: $(date)"
+          echo "✅ Documentation is up to date"
